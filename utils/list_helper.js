@@ -1,6 +1,5 @@
 const dummy = (blogs) => {
-  const blogsArray = blogs
-  console.log(blogsArray)
+  console.log(blogs)
   return 1
 }
 
@@ -14,6 +13,14 @@ const totalLikes = (blogs) => {
     : blogs.reduce(reducer, 0)
 }
 
+const favoriteBlog = (blogs) => {
+  const sortedBlogs = blogs.sort((a, b) => a.likes - b.likes)
+
+  return blogs.length === 0
+    ? []
+    : sortedBlogs[sortedBlogs.length - 1]
+}
+
 module.exports = {
-  dummy, totalLikes
+  dummy, totalLikes, favoriteBlog
 }
