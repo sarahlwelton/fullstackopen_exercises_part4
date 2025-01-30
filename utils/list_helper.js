@@ -1,5 +1,4 @@
 const dummy = (blogs) => {
-  // console.log(blogs)
   return 1
 }
 
@@ -37,7 +36,6 @@ const countAuthors = (blogs) => {
         authorCount[author] = authorCount[author] + 1
       }
     })
-    console.log(authorCount)
     return authorCount
   }
 
@@ -63,6 +61,37 @@ const mostBlogs = (blogs) => {
     :{ 'author': maxAuthor, 'blogs': highestCount }
 }
 
+const countLikes = (blogs) => {
+
+  return blogs.reduce((result, blog) => {
+
+    const { author, likes } = blog
+
+    result[author] = (result[author] || 0) + likes
+
+    return result
+  }, {})
+}
+
+const mostLikes = (blogs) => {
+
+  const countedLikes = countLikes(blogs)
+
+  let highestLikes = 0
+
+  let maxAuthor = ''
+
+  Object.entries(countedLikes).forEach(([ author, likes ]) => {
+    if (likes > highestLikes) {
+      highestLikes = likes
+      maxAuthor = author
+    }
+  })
+  return highestLikes === 0
+    ? undefined
+    :{ 'author': maxAuthor, 'likes': highestLikes }
+}
+
 module.exports = {
-  dummy, totalLikes, favoriteBlog, mostBlogs, countAuthors
+  dummy, totalLikes, favoriteBlog, mostBlogs, countAuthors, countLikes, mostLikes
 }
