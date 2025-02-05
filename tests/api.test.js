@@ -45,6 +45,24 @@ test('a valid blog can be added', async () => {
   assert(blogContents.includes('Adventures in React'))
 })
 
+test('if likes property is missing, default to 0', async () => {
+  const newBlog = {
+    title: 'React is Fun',
+    author: 'Steve McMann',
+    url: 'https://reactisfun.com'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const newBlogList = await api.get('/api/blogs')
+
+  assert.strictEqual(newBlogList.body[7].likes, 0)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
