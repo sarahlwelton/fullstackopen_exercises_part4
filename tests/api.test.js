@@ -1,10 +1,19 @@
-const { test, after } = require('node:test')
+const { test, after, beforeEach, describe } = require('node:test')
 const helper = require('../utils/list_helper')
 const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
+const Blog = require('../models/blog')
 const api = supertest(app)
+
+beforeEach(async () => {
+  await Blog.deleteMany({})
+  for (let blog of helper.blogsList) {
+    let blogObject = new Blog(blog)
+    await blogObject.save()
+  }
+})
 
 test('the list of all blogs is returned correctly', async () => {
   const response = await api.get('/api/blogs')
@@ -60,7 +69,37 @@ test('if likes property is missing, default to 0', async () => {
 
   const newBlogList = await api.get('/api/blogs')
 
-  assert.strictEqual(newBlogList.body[7].likes, 0)
+  assert.strictEqual(newBlogList.body[6].likes, 0)
+})
+
+describe('400 error checks', () => {
+
+  test('if title property is missing, respond with 400', async () => {
+    const newBlog = {
+      author: 'Broken Man',
+      url: 'https://brokenlink.com',
+      likes: 5
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
+
+  test('if url property is missing, respond with 400', async () => {
+    const newBlog = {
+      author: 'Broken Man',
+      title: 'What a Broken Link',
+      likes: 5
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
+
 })
 
 after(async () => {
