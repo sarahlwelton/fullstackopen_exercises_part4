@@ -1,5 +1,6 @@
 const supertest = require('supertest')
 const app = require('../app')
+const blog = require('../models/blog')
 const api = supertest(app)
 
 const dummy = (blogs) => {
@@ -102,6 +103,11 @@ const initialBlogs = async () => {
   return response.body
 }
 
+const blogsInDb = async () => {
+  const blogs = await blog.find({})
+  return blogs.map(blog => blog.toJSON())
+}
+
 const blogsList = [{
   _id: '5a422a851b54a676234d17f7',
   title: 'React patterns',
@@ -153,5 +159,14 @@ const blogsList = [{
 ]
 
 module.exports = {
-  dummy, totalLikes, favoriteBlog, mostBlogs, countAuthors, countLikes, mostLikes, initialBlogs, blogsList
+  dummy,
+  totalLikes,
+  favoriteBlog,
+  mostBlogs,
+  countAuthors,
+  countLikes,
+  mostLikes,
+  initialBlogs,
+  blogsList,
+  blogsInDb
 }

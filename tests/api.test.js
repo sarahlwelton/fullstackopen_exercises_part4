@@ -102,6 +102,31 @@ describe('400 error checks', () => {
 
 })
 
+describe('deleting a note', () => {
+
+  test('succeeds with status code 204 if the id value is valid', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    assert.strictEqual(blogsAtEnd.length, helper.blogsList.length - 1)
+
+    const titles = blogsAtEnd.map(t => t.title)
+    assert(!titles.includes(blogToDelete.title))
+  })
+
+  test('fails with status code 400 if the id value is invalid', async () => {
+    await api
+      .delete('/api/blogs/1234')
+      .expect(400)
+  })
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
