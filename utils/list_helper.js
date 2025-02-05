@@ -1,3 +1,7 @@
+const supertest = require('supertest')
+const app = require('../app')
+const api = supertest(app)
+
 const dummy = (blogs) => {
   return 1
 }
@@ -92,6 +96,12 @@ const mostLikes = (blogs) => {
     :{ 'author': maxAuthor, 'likes': highestLikes }
 }
 
+const initialBlogs = async () => {
+  const response = await api.get('/api/blogs')
+
+  return response.body
+}
+
 module.exports = {
-  dummy, totalLikes, favoriteBlog, mostBlogs, countAuthors, countLikes, mostLikes
+  dummy, totalLikes, favoriteBlog, mostBlogs, countAuthors, countLikes, mostLikes, initialBlogs
 }
