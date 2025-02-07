@@ -127,6 +127,33 @@ describe('deleting a note', () => {
   })
 })
 
+describe('updating a note', () => {
+
+  test('succeeds with status code 200 if the id value is valid, and updates likes', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+
+    const updatedBlog = {
+      likes: 25
+    }
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedBlog)
+      .expect(200)
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    assert.strictEqual(blogsAtEnd[0].likes, 25)
+  })
+
+  test('fails with status code 400 if the id value is invalid', async () => {
+    await api
+      .put('/api/blogs/1234')
+      .expect(400)
+  })
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
