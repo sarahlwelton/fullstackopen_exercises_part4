@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const api = supertest(app)
 
 beforeEach(async () => {
@@ -12,6 +13,11 @@ beforeEach(async () => {
   for (let blog of helper.blogsList) {
     let blogObject = new Blog(blog)
     await blogObject.save()
+  }
+  await User.deleteMany({})
+  for (let user of helper.usersList) {
+    let userObject = new User(user)
+    await userObject.save()
   }
 })
 
@@ -102,7 +108,7 @@ describe('400 error checks', () => {
 
 })
 
-describe('deleting a note', () => {
+describe('deleting a blog', () => {
 
   test('succeeds with status code 204 if the id value is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
@@ -127,7 +133,7 @@ describe('deleting a note', () => {
   })
 })
 
-describe('updating a note', () => {
+describe('updating a blog', () => {
 
   test('succeeds with status code 200 if the id value is valid, and updates likes', async () => {
     const blogsAtStart = await helper.blogsInDb()
@@ -151,6 +157,88 @@ describe('updating a note', () => {
     await api
       .put('/api/blogs/1234')
       .expect(400)
+  })
+})
+
+describe('adding users', () => {
+  test('succeeds with status code 201 if username = unique + username.length/password.length > 3', async () => {
+    const user = {
+      'username': 'long',
+      'name': 'Long Enough',
+      'password': 'longPassword'
+    }
+
+    await api
+      .post('/api/users')
+      .send(user)
+      .expect(201)
+
+    const newUsersList = await helper.usersInDb()
+
+    assert.strictEqual(newUsersList[2].name, 'Long Enough')
+  })
+
+  test('fails with status code 400 if username < 3 characters', async () => {
+
+    const usersAtStart = await helper.usersInDb()
+
+    const shortUser = {
+      'username': 'st',
+      'name': 'Short Name',
+      'password': 'short'
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(shortUser)
+      .expect(400)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert(result.body.error.includes('Usernames and passwords must be at least 3 characters.'))
+
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+
+  test('fails with status code 400 if password < 3 characters', async () => {
+
+    const usersAtStart = await helper.usersInDb()
+
+    const shortUser = {
+      'username': 'short',
+      'name': 'Short Password',
+      'password': 'st'
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(shortUser)
+      .expect(400)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert(result.body.error.includes('Usernames and passwords must be at least 3 characters.'))
+
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+
+  test('fails with status code 400 if username is not unique', async () => {
+
+    const usersAtStart = await helper.usersInDb()
+
+    const repeatUser = {
+      'username': 'hellas',
+      'name': 'Arto Hellas',
+      'password': 'repeat'
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(repeatUser)
+      .expect(400)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert(result.body.error.includes('Usernames must be unique. Enter another username.'))
+
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
   })
 })
 

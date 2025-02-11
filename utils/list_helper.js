@@ -1,6 +1,7 @@
 const supertest = require('supertest')
 const app = require('../app')
 const blog = require('../models/blog')
+const user = require('../models/user')
 const api = supertest(app)
 
 const dummy = (blogs) => {
@@ -158,6 +159,23 @@ const blogsList = [{
 }
 ]
 
+const usersInDb = async () => {
+  const users = await user.find({})
+  return users.map(user => user.toJSON())
+}
+
+const usersList = [{
+  'username': 'hellas',
+  'name': 'Arto Hellas',
+  'id': '67aa78807bb5004e9518f609'
+},
+{
+  'username': 'mluukkai',
+  'name': 'Matti Luukkainen',
+  'id': '67aa7993785bbb0c4df77c0a'
+}
+]
+
 module.exports = {
   dummy,
   totalLikes,
@@ -168,5 +186,7 @@ module.exports = {
   mostLikes,
   initialBlogs,
   blogsList,
-  blogsInDb
+  blogsInDb,
+  usersList,
+  usersInDb
 }

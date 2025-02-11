@@ -359,3 +359,7 @@ describe('authors with most likes', () => {
     })
   })
 })
+
+after(async () => {
+  await mongoose.connection.close()
+})
