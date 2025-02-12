@@ -116,11 +116,7 @@ const blogsList = [{
   url: 'https://reactpatterns.com/',
   likes: 7,
   __v: 0,
-  /* user: {
-    username: 'hellas',
-    name: 'Arto Hellas',
-    _id: '67ab83bcb052c3ea4a77a97c'
-  } */
+  user: '67aa78807bb5004e9518f609'
 },
 {
   _id: '5a422aa71b54a676234d17f8',
@@ -129,11 +125,7 @@ const blogsList = [{
   url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
   likes: 5,
   __v: 0,
-  /* user: {
-    username: 'hellas',
-    name: 'Arto Hellas',
-    _id: '67ab83bcb052c3ea4a77a97c'
-  } */
+  user: '67aa7993785bbb0c4df77c0a'
 },
 {
   _id: '5a422b3a1b54a676234d17f9',
@@ -142,11 +134,7 @@ const blogsList = [{
   url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
   likes: 12,
   __v: 0,
-  /* user: {
-    username: 'hellas',
-    name: 'Arto Hellas',
-    _id: '67ab83bcb052c3ea4a77a97c'
-  } */
+  user: '67aa78807bb5004e9518f609'
 },
 {
   _id: '5a422b891b54a676234d17fa',
@@ -155,11 +143,7 @@ const blogsList = [{
   url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
   likes: 10,
   __v: 0,
-  /* user: {
-    username: 'mluukkai',
-    name: 'Matti Luukkainen',
-    id: '67ab83bcb052c3ea4a77a97e'
-  } */
+  user: '67aa7993785bbb0c4df77c0a'
 },
 {
   _id: '5a422ba71b54a676234d17fb',
@@ -168,11 +152,7 @@ const blogsList = [{
   url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
   likes: 0,
   __v: 0,
-  /* user: {
-    username: 'mluukkai',
-    name: 'Matti Luukkainen',
-    id: '67ab83bcb052c3ea4a77a97e'
-  } */
+  user: '67aa78807bb5004e9518f609'
 },
 {
   _id: '5a422bc61b54a676234d17fc',
@@ -181,11 +161,7 @@ const blogsList = [{
   url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
   likes: 2,
   __v: 0,
-  /* user: {
-    username: 'mluukkai',
-    name: 'Matti Luukkainen',
-    id: '67ab83bcb052c3ea4a77a97e'
-  } */
+  user: '67aa7993785bbb0c4df77c0a'
 }
 ]
 
@@ -198,13 +174,23 @@ const usersList = [{
   username: 'hellas',
   name: 'Arto Hellas',
   passwordHash: '$2a$10$.uEUEIBl90.iMIhjA9VZ/OMswz.ijZp3cgXT.oiBi.uFo54Ava6MK',
-  _id: '67aa78807bb5004e9518f609'
+  _id: '67aa78807bb5004e9518f609',
+  blogs: [
+    '5a422a851b54a676234d17f7',
+    '5a422b3a1b54a676234d17f9',
+    '5a422ba71b54a676234d17fb'
+  ]
 },
 {
   username: 'mluukkai',
   name: 'Matti Luukkainen',
   passwordHash: '$2a$10$Tga8It3xPsKXCR0r52sU6evWODdle.pMGJeqtbS3rGjAFy.IAxGd.',
-  _id: '67aa7993785bbb0c4df77c0a'
+  _id: '67aa7993785bbb0c4df77c0a',
+  blogs: [
+    '5a422aa71b54a676234d17f8',
+    '5a422b891b54a676234d17fa',
+    '5a422bc61b54a676234d17fc'
+  ]
 }
 ]
 
