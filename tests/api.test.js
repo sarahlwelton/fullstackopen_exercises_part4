@@ -44,10 +44,18 @@ test('a valid blog can be added', async () => {
     likes: 0
   }
 
+  const user = {
+    username: 'hellas',
+    password: 'iluvdogs'
+  }
+
   const initialBlogsResult = await helper.initialBlogs()
+
+  const token = (await api.post('/api/login').send(user)).body.token
 
   await api
     .post('/api/blogs')
+    .set('Authorization', `Bearer ${token}`)
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -67,8 +75,16 @@ test('if likes property is missing, default to 0', async () => {
     url: 'https://reactisfun.com'
   }
 
+  const user = {
+    username: 'hellas',
+    password: 'iluvdogs'
+  }
+
+  const token = (await api.post('/api/login').send(user)).body.token
+
   await api
     .post('/api/blogs')
+    .set('Authorization', `Bearer ${token}`)
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -87,8 +103,16 @@ describe('400 error checks', () => {
       likes: 5
     }
 
+    const user = {
+      username: 'hellas',
+      password: 'iluvdogs'
+    }
+
+    const token = (await api.post('/api/login').send(user)).body.token
+
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(400)
   })
@@ -100,8 +124,16 @@ describe('400 error checks', () => {
       likes: 5
     }
 
+    const user = {
+      username: 'hellas',
+      password: 'iluvdogs'
+    }
+
+    const token = (await api.post('/api/login').send(user)).body.token
+
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(400)
   })
@@ -110,12 +142,20 @@ describe('400 error checks', () => {
 
 describe('deleting a blog', () => {
 
-  test('succeeds with status code 204 if the id value is valid', async () => {
+  test('succeeds with status code 204 if the id value and user is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
+    const user = {
+      username: 'hellas',
+      password: 'iluvdogs'
+    }
+
+    const token = (await api.post('/api/login').send(user)).body.token
+
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -127,9 +167,38 @@ describe('deleting a blog', () => {
   })
 
   test('fails with status code 400 if the id value is invalid', async () => {
+    const user = {
+      username: 'hellas',
+      password: 'iluvdogs'
+    }
+
+    const token = (await api.post('/api/login').send(user)).body.token
+
     await api
       .delete('/api/blogs/1234')
+      .set('Authorization', `Bearer ${token}`)
       .expect(400)
+  })
+
+  test('fails with status code 403 if the requesting user did not create the blog', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[1]
+
+    const user = {
+      username: 'hellas',
+      password: 'iluvdogs'
+    }
+
+    const token = (await api.post('/api/login').send(user)).body.token
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(403)
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    assert.strictEqual(blogsAtEnd.length, helper.blogsList.length)
   })
 })
 
